@@ -18,18 +18,9 @@ type Crawler struct {
 	helper  Helper
 }
 
-func NewCrawler(config configuration, url string, rawHtml string) Crawler {
-	return Crawler{
-		config:  config,
-		url:     url,
-		rawHtml: rawHtml,
-	}
-}
-
 func (this Crawler) Crawl() *Article {
 
 	article := new(Article)
-	this.assignParseCandidate()
 	this.assignHtml()
 
 	if this.rawHtml == "" {
@@ -119,14 +110,6 @@ func (this Crawler) Crawl() *Article {
 		panic(err.Error())
 	}
 	return article
-}
-
-func (this *Crawler) assignParseCandidate() {
-	if this.rawHtml != "" {
-		this.helper = NewRawHelper(this.url, this.rawHtml)
-	} else {
-		this.helper = NewUrlHelper(this.url)
-	}
 }
 
 func (this *Crawler) assignHtml() {

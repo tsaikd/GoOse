@@ -3,16 +3,29 @@ package goose
 import (
 	"crypto/md5"
 	"fmt"
-	"github.com/bjarneh/latinx"
 	"io"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/bjarneh/latinx"
 )
 
 type Helper struct {
 	urlString string
 	url       string
 	linkHash  string
+}
+
+func NewRawHelperWithoutCharsetCheck(url string) Helper {
+	h := md5.New()
+	io.WriteString(h, url)
+	bytes := h.Sum(nil)
+	helper := Helper{
+		urlString: url,
+		url:       url,
+		linkHash:  fmt.Sprintf("%s.%d", string(bytes), TimeInNanoseconds()),
+	}
+	return helper
 }
 
 func NewRawHelper(url string, rawHtml string) Helper {
